@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>tvk1308 — decompiled</title>
+  <meta name="description" content="tvk1308 — Luau engineer. Seven years of Roblox games, backends, anti-cheat and reverse engineering, author of the Tovek decompiler. Now working on how people learn.">
+  <meta name="theme-color" content="#0a0b0d">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="tvk1308 — decompiled">
+  <meta property="og:description" content="Reverse engineer of games, cheats &amp; classrooms.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0b0d'/%3E%3Cpath d='M14 18h30M29 18v26' stroke='%23ebe6da' stroke-width='7'/%3E%3Crect x='36' y='40' width='16' height='7' fill='%23ff4a24'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,100..800&family=Nanum+Pen+Script&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    document.documentElement.classList.add('js');
+    // if script.js never boots, show everything instead of hidden reveal states
+    setTimeout(function () { if (!window.__tvk) document.documentElement.classList.remove('js'); }, 2500);
+  </script>
+</head>
+<body>
+<a class="skip" href="#whoami">Skip to content</a>
+
+<!-- custom cursor: reticle in the machine, red pen on paper -->
+<div class="cursor" aria-hidden="true">
+  <div class="cursor__ret"><span class="cursor__addr">0x000000</span></div>
+  <svg class="cursor__pen" viewBox="0 0 40 40">
+    <path d="M3 37 L9 22 L27 4 Q31 1 35 5 Q39 9 36 13 L18 31 Z" fill="#d3241a"/>
+    <path d="M3 37 L9 22 L18 31 Z" fill="#1c1915"/>
+    <path d="M3 37 L11 29" stroke="#f2ecdf" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="11" cy="29" r="1.6" fill="#f2ecdf"/>
+  </svg>
+</div>
+
+<div class="hud-shade" aria-hidden="true"></div>
+<header class="hud">
+  <a class="hud__brand" href="#load"><i class="hud__dot"></i>tvk1308<span>.bin</span></a>
+  <span class="hud__mid" data-hud-world aria-hidden="true">luau vm · attached · pid 1308</span>
+  <span class="hud__pass" aria-hidden="true">
+    <span data-hud-pass>pass 00/07<span class="hud__pname"> · load</span></span>
+    <span class="hud__bar"><i data-hud-fill></i></span>
+    <span data-hud-pct>000%</span>
+  </span>
+</header>
+
+<nav class="rail" aria-label="Sections">
+  <ol>
+    <li><a href="#load" data-rail="00"><b>00</b><span>load</span></a></li>
+    <li><a href="#whoami" data-rail="01"><b>01</b><span>whoami</span></a></li>
+    <li><a href="#graph" data-rail="02"><b>02</b><span>control flow</span></a></li>
+    <li><a href="#tovek" data-rail="03"><b>03</b><span>lift</span></a></li>
+    <li><a href="#audit" data-rail="04"><b>04</b><span>audit</span></a></li>
+    <li><a href="#intent" data-rail="05"><b>05</b><span>intent</span></a></li>
+    <li><a href="#lesson" data-rail="06"><b>06</b><span>lesson</span></a></li>
+    <li><a href="#eof" data-rail="07"><b>07</b><span>eof</span></a></li>
+  </ol>
+</nav>
+
+<div class="toast" role="status" aria-live="polite"></div>
+
+<main>
+
+<!-- ============================================================ 00 · LOAD -->
+<section class="hero" id="load" data-world="machine" data-pass="00" data-pass-name="load">
+  <canvas class="hero__hex" aria-hidden="true"></canvas>
+  <div class="hero__fx" aria-hidden="true"></div>
+
+  <h1 class="hero__name">tvk1308</h1>
+
+  <dl class="hero__meta">
+    <div><dt>file</dt><dd>tvk1308.bin</dd></div>
+    <div><dt>format</dt><dd>luau bytecode</dd></div>
+    <div><dt>compiled</dt><dd>7 years</dd></div>
+    <div><dt>entry</dt><dd>0x1308</dd></div>
+  </dl>
+
+  <ol class="hero__log" aria-hidden="true">
+    <li style="--i:0"><span>attach tvk1308</span><b>ok</b></li>
+    <li style="--i:1"><span>read 7y of bytecode</span><b>ok</b></li>
+    <li style="--i:2"><span>lift control flow</span><b>ok</b></li>
+    <li style="--i:3"><span>recover intent</span><b class="is-pending">pending</b></li>
+  </ol>
+
+  <div class="hero__copy">
+    <p class="hero__kicker"><span>luau engineer</span><span>security</span><span>education research</span></p>
+    <p class="hero__line">Reverse engineer of <em>games</em>, <em>cheats</em> &amp;&nbsp;<em class="hl">classrooms</em>.</p>
+  </div>
+
+  <a class="hero__cta" href="#whoami"><span>scroll to decompile</span><i aria-hidden="true"></i></a>
+</section>
+
+<!-- ============================================================ 01 · WHOAMI -->
+<section class="sec whoami" id="whoami" data-world="machine" data-pass="01" data-pass-name="whoami">
+  <div class="wrap">
+    <header class="pass" data-reveal>
+      <span class="pass__no">pass 01</span><span class="pass__rule"></span><span class="pass__name">symbols</span>
+    </header>
+
+    <div class="whoami__grid">
+      <div class="whoami__text">
+        <h2 class="mtitle" data-reveal>whoami<span class="caret" aria-hidden="true"></span></h2>
+        <p class="whoami__lead" data-reveal style="--d:.08s">Seven years inside Roblox. I build <em>games</em> and the <em>backends</em> behind them — and I break things on purpose, so they can be defended.</p>
+        <p class="whoami__body" data-reveal style="--d:.16s">Anti-cheat, reverse engineering, decompilers, whitelist and licensing services — most of my work sits where systems meet security. The common thread isn’t a language. It’s a habit: read what the machine <i>actually</i> does, distrust the surface, chase the root cause.</p>
+        <p class="whoami__turn" data-reveal style="--d:.24s">Lately I’ve been pointing that habit at a much older system <span aria-hidden="true">→</span></p>
+      </div>
+
+      <div class="watch" data-reveal style="--d:.2s">
+        <div class="watch__bar"><span><i class="dot"></i>watch</span><span>frame 0 · locals</span></div>
+        <ul class="wt">
+          <li class="wt__node is-open">
+            <button class="wt__row" type="button" aria-expanded="true"><i class="wt__tw" aria-hidden="true"></i><span class="wt__k">me</span><span class="wt__v wt__v--dim">table: 0x00001308</span><span class="wt__t">table</span></button>
+            <ul>
+              <li class="wt__row"><span class="wt__k">handle</span><span class="wt__v s">"tvk1308"</span><span class="wt__t">string</span></li>
+              <li class="wt__row"><span class="wt__k">experience</span><span class="wt__v n">7</span><span class="wt__t">years</span></li>
+              <li class="wt__row"><span class="wt__k">platform</span><span class="wt__v s">"Roblox · Luau"</span><span class="wt__t">string</span></li>
+              <li class="wt__node is-open">
+                <button class="wt__row" type="button" aria-expanded="true"><i class="wt__tw" aria-hidden="true"></i><span class="wt__k">builds</span><span class="wt__v wt__v--dim">{…}</span><span class="wt__t">table[3]</span></button>
+                <ul>
+                  <li class="wt__row"><span class="wt__k">[1]</span><span class="wt__v s">"games"</span></li>
+                  <li class="wt__row"><span class="wt__k">[2]</span><span class="wt__v s">"backends"</span></li>
+                  <li class="wt__row"><span class="wt__k">[3]</span><span class="wt__v s">"services"</span></li>
+                </ul>
+              </li>
+              <li class="wt__node is-open">
+                <button class="wt__row" type="button" aria-expanded="true"><i class="wt__tw" aria-hidden="true"></i><span class="wt__k">breaks</span><span class="wt__v wt__v--dim">{…} <em>-- to defend them</em></span><span class="wt__t">table[3]</span></button>
+                <ul>
+                  <li class="wt__row"><span class="wt__k">[1]</span><span class="wt__v s">"cheats"</span></li>
+                  <li class="wt__row"><span class="wt__k">[2]</span><span class="wt__v s">"bytecode"</span></li>
+                  <li class="wt__row"><span class="wt__k">[3]</span><span class="wt__v s">"assumptions"</span></li>
+                </ul>
+              </li>
+              <li class="wt__row is-changed"><span class="wt__k">studying</span><span class="wt__v s">"education"</span><span class="wt__t">changed</span></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <ul class="stats">
+      <li data-reveal><b>07</b><span>years writing Luau</span></li>
+      <li data-reveal style="--d:.08s"><b>∞</b><span>clients I don’t trust</span></li>
+      <li data-reveal style="--d:.16s"><b>01</b><span>system I want to rewrite: school</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ 02 · CONTROL FLOW -->
+<section class="sec cfgsec" id="graph" data-world="machine" data-pass="02" data-pass-name="control flow">
+  <div class="wrap">
+    <header class="pass" data-reveal>
+      <span class="pass__no">pass 02</span><span class="pass__rule"></span><span class="pass__name">control flow</span>
+    </header>
+    <div class="cfg__intro">
+      <h2 class="mtitle" data-reveal>build <span class="sig">⇄</span> break</h2>
+      <p data-reveal style="--d:.1s">Every project I take on goes down one of two branches. Hover a block to trace its edges — both branches converge.</p>
+    </div>
+
+    <div class="cfg" id="cfg">
+      <svg class="cfg__edges" aria-hidden="true"></svg>
+
+      <article class="blk blk--entry" data-node="entry">
+        <header class="blk__head"><span>sub_whoami</span><span class="blk__tag">entry</span></header>
+        <pre class="blk__asm"><span class="op">cmp</span>  intent, BUILD
+<span class="op">jne</span>  loc_break</pre>
+        <p>Two directions, one skill: understanding a system well enough to change it.</p>
+      </article>
+
+      <article class="blk" data-node="games">
+        <header class="blk__head"><span>loc_0040</span><span class="blk__tag blk__tag--t">build</span></header>
+        <h3>Game systems</h3>
+        <p>Combat, progression, economies — the parts players actually feel.</p>
+        <code class="blk__call"><span class="op">call</span> ship_to_players</code>
+      </article>
+      <article class="blk" data-node="backend">
+        <header class="blk__head"><span>loc_0080</span><span class="blk__tag blk__tag--t">build</span></header>
+        <h3>Backends</h3>
+        <p>Servers, data, APIs — the parts nobody sees until they break.</p>
+        <code class="blk__call"><span class="op">call</span> keep_it_alive</code>
+      </article>
+      <article class="blk" data-node="services">
+        <header class="blk__head"><span>loc_00C0</span><span class="blk__tag blk__tag--t">build</span></header>
+        <h3>Whitelist &amp; licensing</h3>
+        <p>Keys, auth, access control — who gets in, and how you know.</p>
+        <code class="blk__call"><span class="op">call</span> verify_key</code>
+      </article>
+
+      <article class="blk" data-node="anticheat">
+        <header class="blk__head"><span>loc_0100</span><span class="blk__tag blk__tag--f">break</span></header>
+        <h3>Anti-cheat</h3>
+        <p>Assume every client is lying. Verify everything on the server.</p>
+        <code class="blk__call"><span class="op">call</span> distrust_client</code>
+      </article>
+      <article class="blk" data-node="tools">
+        <header class="blk__head"><span>loc_0140</span><span class="blk__tag blk__tag--f">break</span></header>
+        <h3>Reversing &amp; tooling</h3>
+        <p>Read what the machine actually does. If the tool doesn’t exist, build it.</p>
+        <code class="blk__call"><span class="op">call</span> build_missing_tool</code>
+      </article>
+      <a class="blk blk--link" data-node="tovek" href="#tovek">
+        <header class="blk__head"><span>loc_0180</span><span class="blk__tag blk__tag--f">break</span></header>
+        <h3>Tovek <span aria-hidden="true">↘</span></h3>
+        <p>A Luau decompiler. Bytecode in, readable source out.</p>
+        <code class="blk__call"><span class="op">jmp</span> pass_03</code>
+      </a>
+
+      <article class="blk blk--exit" data-node="exit">
+        <header class="blk__head"><span>loc_01C0</span><span class="blk__tag">exit</span></header>
+        <h3>understand → teach</h3>
+        <p>Every branch above ends in the same place. The next system I want to understand — and rewrite — isn’t software.</p>
+        <code class="blk__call"><span class="op">jmp</span> education</code>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 03 · LIFT -->
+<section class="sec lift" id="tovek" data-world="machine" data-pass="03" data-pass-name="lift">
+  <div class="wrap">
+    <header class="pass" data-reveal>
+      <span class="pass__no">pass 03</span><span class="pass__rule"></span><span class="pass__name">lift</span>
+    </header>
+
+    <div class="lift__head">
+      <div>
+        <h2 class="mtitle" data-reveal>Tovek</h2>
+        <p class="lift__tag" data-reveal style="--d:.06s">See through bytecode.</p>
+      </div>
+      <p class="lift__desc" data-reveal style="--d:.12s">A Luau decompiler I built in Rust. Compilation flattens away names, loops and structure; Tovek lifts them back into source a human can read — and recompile. Deterministic, local. No AI, no network.</p>
+    </div>
+
+    <div class="lifter" id="lifter" data-reveal>
+      <div class="lifter__pane">
+        <div class="pane-bar"><span><i class="dot dot--sig"></i>bytecode</span><span>proto 1 · 20 instr</span></div>
+        <ol class="bc" aria-label="Luau bytecode listing"></ol>
+      </div>
+      <div class="lifter__pane lifter__pane--src">
+        <div class="pane-bar"><span><i class="dot dot--t"></i>tovek output</span><span>handler.luau</span></div>
+        <ol class="src" aria-label="Decompiled Luau source"></ol>
+        <ul class="evidence" aria-live="polite"></ul>
+      </div>
+      <div class="lifter__ctl">
+        <button class="btn" type="button" data-lift-run><span>▸</span> run lift</button>
+        <ol class="phases" aria-hidden="true">
+          <li data-phase="lift">1 · lift</li>
+          <li data-phase="name">2 · name</li>
+          <li data-phase="done">3 · done</li>
+        </ol>
+        <span class="lifter__stat" data-lift-stat>20 instr → 0 lines</span>
+      </div>
+    </div>
+    <p class="lift__note" data-reveal>An anti-cheat handler, compiled. Watch it lift, then hover any line to see the instructions it came from.</p>
+
+    <ul class="feats">
+      <li data-reveal><b>De-inlining</b><span>Finds helpers that <code>-O2</code> pasted inline and rebuilds the original calls.</span></li>
+      <li data-reveal style="--d:.06s"><b>Evidence-based naming</b><span>Names from service calls, event signatures and attribute keys. No evidence, no guess — just <code>v</code> and <code>p</code>.</span></li>
+      <li data-reveal style="--d:.12s"><b>Control flow</b><span>Rebuilds <code>for</code> loops, guards, <code>continue</code> and <code>break</code> from flat jumps.</span></li>
+      <li data-reveal style="--d:.18s"><b>Modern idioms</b><span>String interpolation, compound assignment, method colons, nested UI trees.</span></li>
+    </ul>
+
+    <dl class="specs">
+      <div data-reveal><dt>bytecode</dt><dd>v4–14</dd></div>
+      <div data-reveal style="--d:.06s"><dt>3,978-script game · 24 threads</dt><dd>0.94s</dd></div>
+      <div data-reveal style="--d:.12s"><dt>runtime profiles passing</dt><dd>252/252</dd></div>
+      <div data-reveal style="--d:.18s"><dt>aborts on 1,500 damaged files</dt><dd>0</dd></div>
+    </dl>
+
+    <div class="lift__links" data-reveal>
+      <a class="btn btn--solid" href="https://kiet1308.github.io/Tovek/" target="_blank" rel="noopener">Open Tovek <span aria-hidden="true">↗</span></a>
+      <a class="btn" href="https://github.com/Kiet1308/Tovek" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>
+      <small>Rust · built on medal · MIT</small>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 04 · AUDIT -->
+<section class="sec audit" id="audit" data-world="machine" data-pass="04" data-pass-name="audit">
+  <div class="wrap">
+    <header class="pass" data-reveal>
+      <span class="pass__no">pass 04</span><span class="pass__rule"></span><span class="pass__name">audit</span>
+    </header>
+    <h2 class="mtitle audit__title" data-reveal>I audit systems for a&nbsp;living. <span>So I audited school.</span></h2>
+
+    <div class="audit__grid">
+      <aside class="target" data-reveal>
+        <div class="target__bar"><span>target</span><span class="blink">● live</span></div>
+        <dl>
+          <div><dt>system</dt><dd>education (legacy build)</dd></div>
+          <div><dt>scope</dt><dd>primary → high school</dd></div>
+          <div><dt>deployed</dt><dd>most of the world</dd></div>
+          <div><dt>method</dt><dd>ask students and teachers one question: <q>why are we learning this?</q></dd></div>
+          <div><dt>status</dt><dd class="sig">unpatched</dd></div>
+        </dl>
+        <div class="target__sum"><b>4</b> findings · <b class="sig">1</b> critical · <b>2</b> high</div>
+      </aside>
+
+      <div class="findings">
+        <article class="finding" data-sev="critical" data-reveal>
+          <header><span class="finding__id">EDU-001</span><span class="sev"><i></i><i></i><i></i><i></i>critical</span></header>
+          <h3>Knowledge-centered architecture</h3>
+          <p>Knowledge is the center of the design, so the system can’t answer the first question every student asks: <em>what is this for?</em> Without that answer, learning has no direction — for students or for teachers.</p>
+        </article>
+        <article class="finding" data-sev="high" data-reveal>
+          <header><span class="finding__id">EDU-002</span><span class="sev"><i></i><i></i><i></i><i class="off"></i>high</span></header>
+          <h3>Cached response: “it’s useful in life”</h3>
+          <p>Ask why we study physics or chemistry and teachers and students return the same string. Students check it against their future and conclude it’s false — so they stop learning.</p>
+<pre class="poc"><span class="pr">$</span> ask student <span class="s">"why learn chemistry?"</span>
+<span class="rs">&lt;</span> "it's useful in life."
+<span class="pr">$</span> ask student <span class="s">"what do you want to do later?"</span>
+<span class="rs">&lt;</span> "office job."
+<span class="pr">$</span> ask student <span class="s">"so?"</span>
+<span class="rs">&lt;</span> <span class="err">[process disengaged]</span></pre>
+        </article>
+        <article class="finding" data-sev="high" data-reveal>
+          <header><span class="finding__id">EDU-003</span><span class="sev"><i></i><i></i><i></i><i class="off"></i>high</span></header>
+          <h3>Syntax memorization ≠ programming</h3>
+          <p>Coding gets taught as syntax plus examples. Students nail the obby they were shown, then freeze on the first real project. Code is just a way to talk to a machine, and AI already translates plain English into it. Drilling syntax trains exactly the part that’s being automated.</p>
+        </article>
+        <article class="finding" data-sev="medium" data-reveal>
+          <header><span class="finding__id">EDU-004</span><span class="sev"><i></i><i></i><i class="off"></i><i class="off"></i>medium</span></header>
+          <h3>Teacher as the only source of truth</h3>
+          <p>Students wait to be taught <code>part.Touched:Connect</code> instead of reading the docs and asking what <code>:Connect</code> actually <em>is</em>. Learning on your own, the skill that matters most, never gets practiced.</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="audit__root" data-reveal>
+      <span class="audit__label">root cause</span>
+      <p>Nobody answered <q>what is school for?</q> before building the school.</p>
+      <p class="audit__rec">Recommendation: <b>don’t hotfix.</b> Rewrite from intent. <span aria-hidden="true">↓</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- the machine dissolves into paper -->
+<div class="dither" data-world="machine" aria-hidden="true">
+  <canvas></canvas>
+  <div class="dither__label"><span>pass 05</span><span>recovering intent</span><span class="dots"></span></div>
+</div>
+
+<!-- ============================================================ PAPER -->
+<div class="book" data-world="paper">
+
+<!-- ============================================================ 05 · INTENT -->
+<section class="page intent" id="intent" data-world="paper" data-pass="05" data-pass-name="intent">
+  <div class="sheet">
+    <p class="kick" data-reveal>pass 05 — recovering intent</p>
+    <h2 class="ptitle" data-reveal style="--d:.06s">Syntax is bytecode.<br>
+      <span class="circled"><em>Thinking</em><svg class="ring" viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M48 84 C 18 52, 96 10, 196 12 C 286 14, 304 74, 236 98 C 168 120, 58 114, 26 88 C 6 70, 36 30, 104 18"/></svg></span> is the source.</h2>
+
+    <div class="intent__grid">
+      <div class="intent__lede" data-reveal style="--d:.12s">
+        <p class="big">Every pass so far recovered <em>what</em>. This one recovers <em>why</em> — the part school forgets to ship.</p>
+        <p>Before you design a school, you have to answer one question: <strong>what is school for?</strong> My answer: to learn <span class="mark">how to learn</span>, to solve problems, and to live well. Every subject, every formula, every line of syntax is a tool for that. It isn’t the point.</p>
+      </div>
+      <aside class="note" data-reveal style="--d:.3s">
+        <span class="note__hand">“at its core, school is about learning — and practicing — how to take in knowledge.”</span>
+        <span class="note__src">— from my notes</span>
+      </aside>
+    </div>
+
+    <div class="fixes">
+      <div class="fixes__head" data-reveal>
+        <h3>Corrections</h3>
+        <span class="fixes__meta">education.sys · 6 errors · red pen</span>
+      </div>
+      <ol>
+        <li class="fix" data-reveal><span class="fix__no">1.</span><span class="fix__old">Knowledge is the center of school.</span><span class="fix__new">Knowledge is a tool. Purpose is the center.</span></li>
+        <li class="fix" data-reveal><span class="fix__no">2.</span><span class="fix__old">“Physics is useful in daily life.”</span><span class="fix__new">Physics trains you to apply thinking to a real problem.</span></li>
+        <li class="fix" data-reveal><span class="fix__no">3.</span><span class="fix__old">Math is for calculating.</span><span class="fix__new">Math is for training thought.</span></li>
+        <li class="fix" data-reveal><span class="fix__no">4.</span><span class="fix__old">Learn to code.</span><span class="fix__new">Learn to program. Code is only the language.</span></li>
+        <li class="fix" data-reveal><span class="fix__no">5.</span><span class="fix__old">Memorize the syntax, copy the example.</span><span class="fix__new">Understand the essence. Read the docs.</span></li>
+        <li class="fix" data-reveal><span class="fix__no">6.</span><span class="fix__old">The teacher delivers the knowledge.</span><span class="fix__new">Students learn. Teachers orient.</span></li>
+      </ol>
+      <div class="grade" data-reveal>
+        <span class="grade__note">right effort, wrong goal.<br>see me after class.</span>
+        <div class="grade__mark" aria-label="Grade: 2 out of 10">
+          <svg class="grade__ring" viewBox="0 0 200 200" aria-hidden="true"><path pathLength="1" d="M150 40 C 110 8, 40 22, 24 82 C 10 140, 70 186, 128 174 C 184 160, 196 92, 168 56 C 150 34, 120 26, 96 30"/></svg>
+          <span class="grade__n">2</span><span class="grade__of">/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="theses">
+      <article class="thesis" data-reveal>
+        <span class="thesis__no">i.</span>
+        <h3>Code is just a language.</h3>
+        <p>Code is a way of talking to a computer, the way English is a way of talking to people. Today you can describe what you want in plain words and an AI will turn it into syntax that runs. So why does almost every course start with memorizing syntax?</p>
+      </article>
+      <article class="thesis" data-reveal style="--d:.08s">
+        <span class="thesis__no">ii.</span>
+        <h3>Thinking doesn’t come from typing.</h3>
+        <p>It comes from what you do when a problem is hard: when you don’t know the answer and keep thinking until you find one. Someone who really thinks like a programmer could build a whole Roblox game with AI without knowing a word of Lua.</p>
+      </article>
+      <article class="thesis" data-reveal style="--d:.16s">
+        <span class="thesis__no">iii.</span>
+        <h3>“It’s useful in life” is a bug.</h3>
+        <p>Students catch that answer fast. Tell them the truth instead: math trains reasoning, and physics and chemistry train you to use reasoning on real problems. Once a student knows what a subject is for, there’s a reason to learn it.</p>
+      </article>
+    </div>
+
+    <blockquote class="pull" data-reveal>
+      <p>Students learn.<br>Teachers <span class="underlined">orient.<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 18 C 60 8, 130 26, 200 14 S 280 10, 296 20"/></svg></span></p>
+      <footer><span class="note__hand">“students teach themselves; teachers point the way!”</span></footer>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============================================================ 06 · LESSON -->
+<section class="page lesson" id="lesson" data-world="paper" data-pass="06" data-pass-name="lesson">
+  <div class="sheet">
+    <p class="kick" data-reveal>pass 06 — lesson 01: variables</p>
+    <h2 class="ptitle" data-reveal style="--d:.06s">Here’s how I’d teach you.<br><em>No code allowed.</em></h2>
+    <p class="lesson__lede" data-reveal style="--d:.12s">Most courses open with <code>local x = 5</code>. I’d rather open with a problem: something you can’t solve by remembering, only by thinking.</p>
+
+    <table class="swap" data-reveal>
+      <thead><tr><th scope="col">The usual exercise</th><th scope="col">What I’d assign</th></tr></thead>
+      <tbody>
+        <tr><td>“Input <i>a</i>. If <i>a</i> &gt; 5, print ‘big’.”</td><td>Solve a quadratic equation.</td></tr>
+        <tr><td>“Input a weight. Print it back.”</td><td>Build a BMI checker.</td></tr>
+        <tr><td>“Print the numbers 1 to 10.”</td><td>Sort a list.</td></tr>
+        <tr><td>“Memorize <code>part.Touched:Connect</code>.”</td><td>Read the docs. Explain what <code>:Connect</code> actually is.</td></tr>
+        <tr><td>“Declare a variable.”</td><td>Swap two variables. <span class="pen">← try it, right here</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="lab" id="lab" data-reveal>
+      <div class="lab__task">
+        <span class="lab__tag">exercise</span>
+        <p class="lab__q">Glass <b class="ink-r">a</b> holds red ink. Glass <b class="ink-p">b</b> holds purple ink. <strong>Swap&nbsp;them.</strong></p>
+        <p class="lab__rule">You can only pour into an empty glass. Click a glass to pick it up, then click where to pour it.</p>
+      </div>
+
+      <div class="bench">
+        <svg class="bench__fx" aria-hidden="true"><path class="stream" d=""/></svg>
+        <button class="glass" type="button" data-g="a"></button>
+        <button class="glass" type="button" data-g="b"></button>
+        <button class="glass" type="button" data-g="c"></button>
+      </div>
+
+      <div class="lab__foot">
+        <p class="lab__msg" aria-live="polite">pick up a glass.</p>
+        <div class="lab__ctl">
+          <span class="lab__moves">moves: 0</span>
+          <button type="button" class="lab__btn" data-lab-hint>stuck?</button>
+          <button type="button" class="lab__btn" data-lab-reset>reset</button>
+        </div>
+      </div>
+
+      <div class="lab__reveal" hidden>
+        <p class="lab__won">you just wrote your first program.</p>
+        <div class="lab__out">
+          <pre class="lab__code"><code></code></pre>
+          <div class="lab__score"><svg viewBox="0 0 200 200" aria-hidden="true"><path pathLength="1" d="M150 40 C 110 8, 40 22, 24 82 C 10 140, 70 186, 128 174 C 184 160, 196 92, 168 56 C 150 34, 120 26, 96 30"/></svg><span class="lab__grade"></span><span class="lab__gnote"></span></div>
+        </div>
+        <p class="lab__explain">That spare glass has a name in every programming language: a <strong>temporary variable</strong>. You didn’t memorize it. The problem made you invent it. Learning the syntax takes ten seconds; the thinking is what you keep.</p>
+        <p class="lab__ps">p.s. Luau lets you write <code>a, b = b, a</code>. That’s a tool, and now you know why it exists.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 07 · EOF -->
+<footer class="page eof" id="eof" data-world="paper" data-pass="07" data-pass-name="eof">
+  <div class="sheet">
+    <p class="kick" data-reveal>pass 07 — end of file</p>
+    <h2 class="eof__ret" data-reveal style="--d:.06s"><span class="eof__kw">return</span> <em>tvk1308</em></h2>
+    <p class="eof__lede" data-reveal style="--d:.12s">Need a game system that’s fast, fair, or hard to break? Want to argue about how people should learn? I’d like to hear about either.</p>
+
+    <ul class="eof__links" data-reveal style="--d:.18s">
+      <li><a href="https://github.com/Kiet1308" target="_blank" rel="noopener"><span class="k">github</span><span class="v">Kiet1308</span><i aria-hidden="true">↗</i></a></li>
+      <li><a href="https://kiet1308.github.io/Tovek/" target="_blank" rel="noopener"><span class="k">tovek</span><span class="v">kiet1308.github.io/Tovek</span><i aria-hidden="true">↗</i></a></li>
+      <!-- add more contact rows here, e.g.:
+      <li><a href="mailto:you@example.com"><span class="k">email</span><span class="v">you@example.com</span><i aria-hidden="true">↗</i></a></li>
+      -->
+      <li><button type="button" data-copy="tvk1308"><span class="k">handle</span><span class="v">tvk1308</span><i aria-hidden="true">copy</i></button></li>
+    </ul>
+
+    <div class="eof__next" data-reveal>
+      <span class="pen">next experiment →</span>
+      <p>A YouTube channel that teaches Roblox Studio this way: problems first, docs instead of spoon-feeding, syntax last. <span class="status">status: compiling<span class="dots"></span></span></p>
+    </div>
+
+    <div class="sign" data-reveal>
+      <span class="sign__name">tvk1308</span>
+      <svg class="sign__line" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M6 40 C 80 20, 160 52, 240 30 S 360 18, 394 34 M300 46 C 320 40, 350 44, 380 40"/></svg>
+    </div>
+
+    <p class="eof__end">; EOF · 07 passes · 0 guesses · © <span data-year>2026</span> tvk1308</p>
+  </div>
+</footer>
+
+</div><!-- /.book -->
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
