@@ -54,7 +54,7 @@
       if (sec === current) return;
       current = sec;
       const p = sec.dataset.pass, w = sec.dataset.world;
-      hudPass.innerHTML = `pass ${p}/07<span class="hud__pname"> · ${sec.dataset.passName}</span>`;
+      hudPass.innerHTML = `pass ${p}/08<span class="hud__pname"> · ${sec.dataset.passName}</span>`;
       hudWorld.textContent = WORLD[w];
       document.documentElement.dataset.world = w;
       rail.forEach(a => a.classList.toggle('is-active', a.dataset.rail === p));
@@ -827,6 +827,146 @@
   }
 
   /* ------------------------------------------------------------------
+     07 · whitelist: one keycard per friend, built from data-* attributes
+     ------------------------------------------------------------------ */
+
+  // SHA-256 of the handle; falls back to an (honestly labelled) FNV hash outside secure contexts
+  async function fingerprint(s) {
+    try {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+      return { bytes: new Uint8Array(buf), label: 'SHA256' };
+    } catch (e) {
+      const out = new Uint8Array(32);
+      let h = 2166136261;
+      for (let i = 0; i < 32; i++) {
+        for (const ch of s + i) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+        out[i] = h & 255;
+      }
+      return { bytes: out, label: 'FNV' };
+    }
+  }
+
+  // OpenSSH's "drunken bishop" randomart, the picture ssh-keygen draws for a key
+  function randomart(bytes, foot) {
+    const W = 17, H = 9, SYM = ' .o+=*BOX@%&#/^SE';
+    const f = new Uint8Array(W * H);
+    let x = 8, y = 4;
+    for (const b of bytes) {
+      let v = b;
+      for (let k = 0; k < 4; k++) {
+        x = clamp(x + (v & 1 ? 1 : -1), 0, W - 1);
+        y = clamp(y + (v & 2 ? 1 : -1), 0, H - 1);
+        if (f[y * W + x] < 14) f[y * W + x]++;
+        v >>= 2;
+      }
+    }
+    f[4 * W + 8] = 15; // S: start
+    f[y * W + x] = 16; // E: end
+    const bar = t => {
+      const l = `[${t}]`, a = (W - l.length) >> 1;
+      return '+' + '-'.repeat(a) + l + '-'.repeat(W - a - l.length) + '+';
+    };
+    const rows = [];
+    for (let r = 0; r < H; r++) {
+      let s = '|';
+      for (let c = 0; c < W; c++) s += SYM[f[r * W + c]];
+      rows.push(s + '|');
+    }
+    return [bar('WHITELIST'), ...rows, bar(foot)].join('\n');
+  }
+
+  function keycards() {
+    const wall = $('.kc-wall');
+    if (!wall) return;
+    const cards = $$('.kc', wall);
+    const pad = n => String(n).padStart(2, '0');
+    const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const b64 = bytes => btoa(String.fromCharCode(...bytes)).replace(/=+$/, '');
+
+    cards.forEach((c, i) => {
+      const d = c.dataset;
+      const handle = d.handle || c.textContent.trim();
+      const name = d.name || '';
+      const site = d.site || c.hostname.replace(/^www\./, '');
+      c.setAttribute('aria-label', `${handle}${name ? ` (${name})` : ''}: ${site}. Opens in a new tab.`);
+      c.innerHTML = `
+        <span class="kc__card">
+          <span class="kc__top"><span><b>trusted client</b> · tvk1308/whitelist</span><span>№ ${pad(i + 1)}</span></span>
+          <span class="kc__photo">
+            <span class="kc__initial">${esc((name || handle).charAt(0).toUpperCase())}</span>
+            ${d.avatar ? `<img src="${esc(d.avatar)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}
+          </span>
+          <span class="kc__handle">${esc(handle)}</span>
+          ${name ? `<span class="kc__name">${esc(name)}</span>` : ''}
+          <span class="kc__clear"><i></i>clearance · root</span>
+          <span class="kc__art"></span>
+          <span class="kc__site">${esc(site)} <i>↗</i></span>
+          <span class="kc__fp">computing fingerprint…</span>
+          <span class="kc__seal"><svg viewBox="0 0 100 100"><defs><path id="kc-seal-${i}" d="M50,50 m-35,0 a35,35 0 1,1 70,0 a35,35 0 1,1 -70,0"/></defs><text><textPath href="#kc-seal-${i}">VERIFIED · TRUSTED · TVK1308 ·</textPath></text><text class="kc__seal-mark" x="50" y="60" text-anchor="middle">✓</text></svg></span>
+          <span class="kc__foil"></span>
+          <span class="kc__glare"></span>
+          <span class="kc__scan"></span>
+          <span class="kc__stamp">access granted</span>
+        </span>
+        ${d.note ? `<span class="kc__note">“${esc(d.note)}”</span>` : ''}`;
+      c.classList.add('is-built');
+      const img = $('img', c);
+      if (img) img.addEventListener('error', () => img.remove());
+
+      fingerprint(handle).then(({ bytes, label }) => {
+        $('.kc__art', c).textContent = randomart(bytes, label);
+        $('.kc__fp', c).textContent = `${label}:${b64(bytes)}`;
+      });
+
+      // tilt + holo follow the pointer
+      if (FINE && !RM) {
+        const card = $('.kc__card', c);
+        c.addEventListener('pointermove', e => {
+          const r = c.getBoundingClientRect();
+          const px = clamp((e.clientX - r.left) / r.width, 0, 1);
+          const py = clamp((e.clientY - r.top) / r.width / 0.63, 0, 1);
+          c.classList.add('is-tilting');
+          card.style.setProperty('--rx', `${((0.5 - py) * 16).toFixed(2)}deg`);
+          card.style.setProperty('--ry', `${((px - 0.5) * 20).toFixed(2)}deg`);
+          card.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
+          card.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
+          card.style.setProperty('--hue', `${Math.round((px - 0.5) * 140)}deg`);
+        });
+        c.addEventListener('pointerleave', () => {
+          c.classList.remove('is-tilting');
+          ['--rx', '--ry', '--hue'].forEach(p => card.style.setProperty(p, '0deg'));
+          card.style.setProperty('--mx', '50%');
+          card.style.setProperty('--my', '50%');
+        });
+      }
+
+      // the link opens right away (new tab); the swipe plays here
+      c.addEventListener('click', () => {
+        c.classList.remove('granted');
+        void c.offsetWidth;
+        c.classList.add('granted');
+        clearTimeout(c._granted);
+        c._granted = setTimeout(() => c.classList.remove('granted'), 2600);
+      });
+    });
+
+    const slot = document.createElement('div');
+    slot.className = 'kc-slot';
+    slot.setAttribute('aria-hidden', 'true');
+    slot.innerHTML = `
+      <span class="kc-slot__card">
+        <span class="kc-slot__top"><span>slot · open</span><span>№ ${pad(cards.length + 1)}</span></span>
+        <span class="kc-slot__photo">?</span>
+        <span class="kc-slot__lines"><i></i><i></i><i></i></span>
+        <span class="kc-slot__hand">maybe you?</span>
+      </span>`;
+    wall.appendChild(slot);
+
+    const w = $('[data-whitelist]');
+    if (w) w.textContent = `{${cards.map(c => `"${c.dataset.handle}"`).join(', ')}}`;
+  }
+
+  /* ------------------------------------------------------------------
      small things
      ------------------------------------------------------------------ */
   function misc() {
@@ -849,7 +989,7 @@
     );
   }
 
-  [reveal, passes, hexfield, cursor, watch, cfg, lifter, dither, lab, anticheat, misc].forEach(fn => {
+  [keycards, reveal, passes, hexfield, cursor, watch, cfg, lifter, dither, lab, anticheat, misc].forEach(fn => {
     try { fn(); } catch (err) { console.error(`[${fn.name}]`, err); }
   });
 })();

@@ -39,7 +39,7 @@
   <a class="hud__brand" href="#load"><i class="hud__dot"></i>tvk1308<span>.bin</span></a>
   <span class="hud__mid" data-hud-world aria-hidden="true">luau vm · attached · pid 1308</span>
   <span class="hud__pass" aria-hidden="true">
-    <span data-hud-pass>pass 00/07<span class="hud__pname"> · load</span></span>
+    <span data-hud-pass>pass 00/08<span class="hud__pname"> · load</span></span>
     <span class="hud__bar"><i data-hud-fill></i></span>
     <span data-hud-pct>000%</span>
   </span>
@@ -54,7 +54,8 @@
     <li><a href="#audit" data-rail="04"><b>04</b><span>audit</span></a></li>
     <li><a href="#intent" data-rail="05"><b>05</b><span>intent</span></a></li>
     <li><a href="#lesson" data-rail="06"><b>06</b><span>lesson</span></a></li>
-    <li><a href="#eof" data-rail="07"><b>07</b><span>eof</span></a></li>
+    <li><a href="#friends" data-rail="07"><b>07</b><span>whitelist</span></a></li>
+    <li><a href="#eof" data-rail="08"><b>08</b><span>eof</span></a></li>
   </ol>
 </nav>
 
@@ -131,6 +132,7 @@
                   <li class="wt__row"><span class="wt__k">[3]</span><span class="wt__v s">"assumptions"</span></li>
                 </ul>
               </li>
+              <li class="wt__row"><span class="wt__k">whitelist</span><a class="wt__v s wt__link" href="#friends" data-whitelist>{"acsu123"}</a><span class="wt__t">→ pass 07</span></li>
               <li class="wt__row is-changed"><span class="wt__k">studying</span><span class="wt__v s">"education"</span><span class="wt__t">changed</span></li>
             </ul>
           </li>
@@ -461,10 +463,31 @@
   </div>
 </section>
 
-<!-- ============================================================ 07 · EOF -->
-<footer class="page eof" id="eof" data-world="paper" data-pass="07" data-pass-name="eof">
+<!-- ============================================================ 07 · WHITELIST (friends) -->
+<section class="page friends" id="friends" data-world="paper" data-pass="07" data-pass-name="whitelist">
   <div class="sheet">
-    <p class="kick" data-reveal>pass 07 — end of file</p>
+    <p class="kick" data-reveal>pass 07 — whitelist</p>
+    <div class="friends__head">
+      <h2 class="ptitle" data-reveal style="--d:.06s">I never trust the client.<br><em>Except these.</em></h2>
+      <p class="friends__lede" data-reveal style="--d:.12s">Friends, and people whose work I’d vouch for. Each one carries a keycard with a fingerprint derived from their handle. Tap a card to swipe in.</p>
+    </div>
+
+    <!-- ONE LINE PER FRIEND. script.js builds the keycard: number, SHA-256 fingerprint art and the open slot.
+         data-avatar is optional (any image URL; for GitHub use https://github.com/USERNAME.png).
+         data-note is optional: a handwritten line under the card. -->
+    <div class="kc-wall" data-reveal>
+      <a class="kc" href="https://www.duonghongquang.id.vn" target="_blank" rel="noopener"
+         data-handle="acsu123" data-name="Quang" data-site="duonghongquang.id.vn"
+         data-avatar="https://github.com/acsu123.png?size=240"
+         data-note="when in doubt, ask the spring breeze.">acsu123 · Quang · duonghongquang.id.vn</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 08 · EOF -->
+<footer class="page eof" id="eof" data-world="paper" data-pass="08" data-pass-name="eof">
+  <div class="sheet">
+    <p class="kick" data-reveal>pass 08 — end of file</p>
     <h2 class="eof__ret" data-reveal style="--d:.06s"><span class="eof__kw">return</span> <em>tvk1308</em></h2>
     <p class="eof__lede" data-reveal style="--d:.12s">Need a game system that’s fast, fair, or hard to break? Want to argue about how people should learn? I’d like to hear about either.</p>
 
@@ -487,7 +510,7 @@
       <svg class="sign__line" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M6 40 C 80 20, 160 52, 240 30 S 360 18, 394 34 M300 46 C 320 40, 350 44, 380 40"/></svg>
     </div>
 
-    <p class="eof__end">; EOF · 07 passes · 0 guesses · © <span data-year>2026</span> tvk1308</p>
+    <p class="eof__end">; EOF · 08 passes · 0 guesses · © <span data-year>2026</span> tvk1308</p>
   </div>
 </footer>
 
